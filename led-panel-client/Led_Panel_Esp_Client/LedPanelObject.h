@@ -1,43 +1,65 @@
 #ifndef LED_PANEL_OBJECT
 #define LED_PANEL_OBJECT
 
-/* Required capcity for current JSON version */
-const size_t LED_PANEL_OBJECT_CAPACITY = 512;
-
-/*
-{
-  "name": "",
-  "pos_x":"",
-  "pos_y":"",
-  "rotationPoint_x":"",
-  "rotationPoint_y":"",
-  "imageData":"" //hexData
-}
-*/
-struct LedPanelObject {
-  const char* name;
-  int8_t pos_x;
-  int8_t pos_y;
-  int8_t rotationPoint_x;
-  int8_t rotationPoint_y;
-  uint8_t imageData_lenght;
-  byte* imageData;
-};
+#include <memory>
+#include <string>
 
 /**
- * Frees the dynamically allocated memory for the imageData field in a LedPanelObject struct.
+ * @brief Struct representing a LED panel object.
  *
- * This function is designed to release the memory that was previously allocated for the imageData
- * field of a LedPanelObject struct.
+ * This struct holds the data for a LED panel object, including its name, position,
+ * rotation point, and image data. The image data is stored as a unique pointer to a
+ * byte array, with the length of the array stored in `imageData_length`.
  *
- * @param ledPanel A reference to a LedPanelObject struct whose imageData field's memory needs to be freed.
+ * Example JSON representation:
+ * {
+ *   "name": "",
+ *   "pos_x":"",
+ *   "pos_y":"",
+ *   "rotationPoint_x":"",
+ *   "rotationPoint_y":"",
+ *   "imageData":"" //hexData
+ * }
  */
-void freeLedPanelObject(const LedPanelObject& ledPanel) {
- // Free the dynamically allocated memory for imageData.
- free(ledPanel.imageData);
- // Reset the imageData pointer and length to avoid dangling pointers.
- ledPanel.imageData = nullptr;
- ledPanel.imageData_lenght = 0;
-}
+struct LedPanelObject {
+  /**
+   * @brief The name of the LED panel object.
+   */
+  std::string name;
+
+  /**
+   * @brief The x-coordinate of the LED panel object's position.
+   */
+  int pos_x;
+
+  /**
+   * @brief The y-coordinate of the LED panel object's position.
+   */
+  int pos_y;
+
+  /**
+   * @brief The x-coordinate of the LED panel object's rotation point.
+   */
+  int rotationPoint_x;
+
+  /**
+   * @brief The y-coordinate of the LED panel object's rotation point.
+   */
+  int rotationPoint_y;
+
+  /**
+   * @brief Unique pointer to the byte array containing the image data.
+   * A chunk of 5 hex numbers represents an image point in the
+   * LedPanelObject, with the first two numbers indicating the x and y positions relative to
+   * the whole object position on the panel, and the next three numbers representing the RGB
+   * values.
+   */
+  std::unique_ptr<byte[]> imageData;
+
+  /**
+   * @brief The length of the image data byte array.
+   */
+  std::size_t imageData_length;
+};
 
 #endif  //LED_PANEL_OBJECT
