@@ -14,17 +14,23 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Picture {
+public class LedPanelObject {
 
 	@Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2")
-    @Column(unique = true, nullable = false, length = 36)
+	@GeneratedValue(generator = "uuid2")
+	@GenericGenerator(name = "uuid2")
+	@Column(unique = true, nullable = false, length = 36)
 	private String id;
-	
-	private byte x;
-	
-	private byte y;
-	
+
+	private String name;
+
+	private int x;
+
+	private int y;
+
+	private int rotationPointX;
+
+	private int rotationPointY;
+
 	private byte[] data;
 }
