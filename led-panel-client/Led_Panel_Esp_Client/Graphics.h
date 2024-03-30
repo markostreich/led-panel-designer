@@ -9,8 +9,8 @@
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
 #include <avr/power.h>  // Required for 16 MHz Adafruit Trinket
-#endif // __AVR__
-#endif // not TEST_MODE
+#endif                  // __AVR__
+#endif                  // not TEST_MODE
 
 /* LED Potentiometer */
 #define POT T8
@@ -58,16 +58,13 @@ constexpr uint8_t size_y = 20;
  * @param blue The blue component of the color.
  */
 void drawPixel(int8_t x, int8_t y, uint8_t red, uint8_t green, uint8_t blue) {
-#ifndef TEST_MODE
   // Check if the coordinates are within the bounds of the LED panel
   if (x >= size_x || y >= size_y || x < 0 || y < 0)
     return;
 
   // Calculate the pixel position based on the starting position (left or right)
   const int8_t pos_x = startLeft ? (y % 2 == 0 ? x : size_x - 1 - x) : (y % 2 == 1 ? x : size_x - 1 - x);
-
-  pixels.setPixelColor(pos_x + size_x * y, pixels.Color(red, green, blue));
-#else
+#ifdef TEST_MODE
   Serial.print("Drawing Pixel: ");
   Serial.print("x: ");
   Serial.print(x);
@@ -79,7 +76,9 @@ void drawPixel(int8_t x, int8_t y, uint8_t red, uint8_t green, uint8_t blue) {
   Serial.print(green);
   Serial.print(", blue: ");
   Serial.println(blue);
-#endif  // not TEST_MODE
+#else
+  pixels.setPixelColor(pos_x + size_x * y, pixels.Color(red, green, blue));
+#endif  // TEST_MODE
 }
 
 /**

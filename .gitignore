@@ -1,3 +1,6 @@
+LocalLan.h
+ServerInfo.h
+
 ### C++ ###
 # Prerequisites
 *.d
