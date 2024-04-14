@@ -17,10 +17,11 @@
 
 #ifndef TEST_MODE
 /** @brief Amount of pixels in the LED panel. */
-constexpr uint16_t NUMPIXELS = 600;
+//constexpr uint16_t NUMPIXELS = 600;
+constexpr uint16_t NUMPIXELS = 16 * 16;
 
 /** @brief LED data pin. */
-constexpr uint8_t PIN = 42;
+constexpr uint8_t PIN = 21;
 
 /** @brief Interface to graphical hardware. */
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
@@ -33,10 +34,10 @@ uint16_t brightness = 0;
 constexpr boolean startLeft = true;
 
 /** @brief Size in x-direction of the LED panel. */
-constexpr uint8_t size_x = 30;
+constexpr uint8_t size_x = 16;
 
 /** @brief Size in y-direction of the LED panel. */
-constexpr uint8_t size_y = 20;
+constexpr uint8_t size_y = 16;
 
 /**
  * @brief Draws a single pixel on a LED panel with specified color.
@@ -135,6 +136,7 @@ void drawObject(const LedPanelObject* ledPanelObject) {
     const int8_t b = ledPanelObject->imageData[i + 4];
     drawPixel(x, y, r, g, b);
   }
+  pixels.show();
 }
 
 /**
@@ -166,6 +168,22 @@ void drawRotatedPixel(int8_t x, int8_t y, float rot_x, float rot_y, float cosTau
   //float new_x = cosTau * ((float)x - 14.5) + sinTau * ((float)y-9.5);
   //float new_y = -sinTau * ((float)x - 14.5) + cosTau * ((float)y-9.5);
   drawPixel((int8_t)(new_x + 0.5), (int8_t)(new_y + 0.5), red, green, blue);
+}
+
+void drawRotatedObject(const LedPanelObject* ledPanelObject, float angle) {
+  float angle_rad = angle * M_PI / 180.0;
+  float cosTau = cos(angle_rad);
+  float sinTau = sin(angle_rad);
+  const int8_t pos_x = ledPanelObject->pos_x;
+  const int8_t pos_y = ledPanelObject->pos_y;
+  for (int i = 0; i < ledPanelObject->imageData_length; i += 5) {
+    const int8_t x = pos_x + ledPanelObject->imageData[i];
+    const int8_t y = pos_y + ledPanelObject->imageData[i + 1];
+    const int8_t r = ledPanelObject->imageData[i + 2];
+    const int8_t g = ledPanelObject->imageData[i + 3];
+    const int8_t b = ledPanelObject->imageData[i + 4];
+    drawRotatedPixel(x, y, ledPanelObject->rotationPoint_x, ledPanelObject->rotationPoint_y, cosTau, sinTau, r, g, b);
+  }
 }
 
 /**

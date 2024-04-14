@@ -83,7 +83,7 @@ String getUpdate() {
   }
   return json;
 #else
-  return "{\"name\": \"testJsonName\",\"pos_x\":0,\"pos_y\":0,\"rotationPoint_x\":5,\"rotationPoint_y\":5,\"imageData\":\"1112A7A2D70A12A7A277\"}";
+  return "{\"name\": \"restJsonName\",\"pos_x\":0,\"pos_y\":0,\"rotationPoint_x\":5,\"rotationPoint_y\":5,\"imageData\":\"1112A7A2D70A12A7A277\"}";
 #endif  // not TEST_MODE
 }
 

@@ -1,5 +1,7 @@
 LocalLan.h
 ServerInfo.h
+Bruno/
+*.db
 
 ### C++ ###
 # Prerequisites

@@ -23,6 +23,7 @@ public class LedPanelObject {
 	@Column(unique = true, nullable = false, length = 36)
 	private String id;
 
+	@Column(unique = true)
 	private String name;
 
 	private int x;
@@ -34,7 +35,7 @@ public class LedPanelObject {
 	private int rotationPointY;
 
 	private byte[] data;
-	
+
 	@ManyToOne
 	private LedPanelDevice device;
 }

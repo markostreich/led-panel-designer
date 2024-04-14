@@ -15,11 +15,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LedPanelDevice {
+
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2")
 	@Column(unique = true, nullable = false, length = 36)
 	private String id;
 
-	private String deviceName;
+	@Column(unique = true)
+	private String name;
 }
