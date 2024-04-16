@@ -5,12 +5,13 @@
 #include "JsonAdapter.h"
 #include "RestClient.h"
 
-const char* testJson = "{\"name\": \"testJsonName\",\"pos_x\":7,\"pos_y\":7,\"rotationPoint_x\":7,\"rotationPoint_y\":7,\"imageData\":\"0000A7A700010100A7A70202A700A70303A700A70404A700A70505A700A70606A700A70707A700A70806A800A70909A700A70A0AA700A70B0BA700A7\"}";
-const char* testJson2 = "{\"name\": \"testJsonName2\",\"pos_x\":0,\"pos_y\":0,\"rotationPoint_x\":7,\"rotationPoint_y\":7,\"imageData\":\"0A0A00A7000B0B00A7000F0F00A700\"}";
-
-
+const char* heart = "{\"name\": \"heart\",\"pos_x\":-3,\"pos_y\":-3,\"rotationPoint_x\":8,\"rotationPoint_y\":8,\"imageData\":\"090400eeff080500eeff0905ff00dd0a0500eeff070600eeff0806ff00dd0906ff00000a06ff00dd0b0600eeff060700eeff0707ff00dd0807ff00000907ff00000a07ff00000b07ff00dd0c0700eeff050800eeff0608ff00dd0708ff00000808ff00000908ff00000a08ff00000b08ff00000c08ff00dd0d0800eeff040900eeff0509ff00dd0609ff00000709ff00000809ff00000909ff00000a09ff00000b09ff00000c09ff00000d09ff00dd0e0900eeff040a00eeff050aff00dd060aff0000070aff0000080aff0000090aff00dd0a0aff00000b0aff00000c0aff00000d0aff00dd0e0a00eeff040b00eeff050bff00dd060bff0000070bff0000080bff00dd090b00eeff0a0bff00dd0b0bff00000c0bff00000d0bff00dd0e0b00eeff050c00eeff060cff00dd070cff00dd080c00eeff0a0c00eeff0b0cff00dd0c0cff00dd0d0c00eeff060d00eeff070d00eeff0b0d00eeff0c0d00eeff\"}";
+const char* smiley = "{\"name\": \"smiley\",\"pos_x\":-3,\"pos_y\":-3,\"rotationPoint_x\":7,\"rotationPoint_y\":7,\"imageData\":\"0903ffff000a03ffff000b03ffff000704ffff000804ffff000904ffff000a04ffff000b04ffff000c04ffff000d04ffff000605ffff000705ffff000805ffff000c05ffff000d05ffff000e05ffff000506ffff000606ffff000a06ffff000e06ffff000f06ffff000407ffff000507ffff000807ffff000907ffff000a07ffff000b07ffff000c07ffff000f07ffff001007ffff000408ffff000508ffff000708ffff000808ffff000908ffff000a08ffff000b08ffff000c08ffff000d08ffff000f08ffff001008ffff000309ffff000409ffff000509ffff000609ffff000709ffff000809ffff000909ffff000b09ffff000c09ffff000d09ffff000e09ffff000f09ffff001009ffff001109ffff00030affff00040affff00050affff00060affff00070affff00080affff00090affff000b0affff000c0affff000d0affff000e0affff000f0affff00100affff00110affff00030bffff00040bffff00050bffff00060bffff00070bffff00080bffff00090bffff000b0bffff000c0bffff000d0bffff000e0bffff000f0bffff00100bffff00110bffff00040cffff00050cffff00080cffff00090cffff000a0cffff000b0cffff000c0cffff000f0cffff00100cffff00040dffff00050dffff00080dffff00090dffff000a0dffff000b0dffff000c0dffff000f0dffff00100dffff00050effff00060effff00070effff00080effff00090effff000a0effff000b0effff000c0effff000d0effff000e0effff000f0effff00060fffff00070fffff00080fffff00090fffff000a0fffff000b0fffff000c0fffff000d0fffff000e0fffff000710ffff000810ffff000910ffff000a10ffff000b10ffff000c10ffff000d10ffff000911ffff000a11ffff000b11ffff00\"}";
+const char* smiley2 = "{\"name\": \"smiley\",\"pos_x\":0,\"pos_y\":0,\"rotationPoint_x\":7,\"rotationPoint_y\":7,\"imageData\":\"0500dcde3f0600fcff4d0700fcff4d0800fcff4d0900fcff4d0a00dcde3f0301dcde3f0401fcff4d0501fcff4d0601fcff4d0701fcff4d0801fcff4d0901fcff4d0a01fcff4d0b01fcff4d0c01dcde3f0202dcde3f0302fcff4d0402fcff4d05024040400a024040400b02fcff4d0c02fcff4d0d02dcde3f0103dcde3f0203fcff4d0303fcff4d050371603d06037c786e07037c786e08037c786e09037c786e0a0354462c0c03fcff4d0d03fcff4d0e03dcde3f0104fcff4d0204fcff4d0304404040050471603d06047b6f5607047b6f5608047b6f5609047b6f560a0454462c0c044040400d04fcff4d0e04fcff4d0005dcde3f0105fcff4d0205fcff4d04057b6f5605057b6f5606057b6f56070554462c080554462c09057b6f560a057b6f560b057b6f560d05fcff4d0e05fcff4d0f05dcde3f0006fcff4d0106fcff4d0206fcff4d030640404004064040400506d9db3d0606d9db3d0706d9db3d0806d9db3d0906d9db3d0a06d9db3d0b064040400c064040400d06fcff4d0e06fcff4d0f06fcff4d0007fcff4d0107fcff4d0207fcff4d0307fcff4d0407fcff4d0507fcff4d0607fcff4d0707fcff4d0807fcff4d0907fcff4d0a07fcff4d0b07fcff4d0c07fcff4d0d07fcff4d0e07fcff4d0f07fcff4d0008fcff4d0108fcff4d0208fcff4d0308fcff4d04084040400508fcff4d06081c1c1c07081c1c1c08081c1c1c09081c1c1c0a08fcff4d0b084040400c08fcff4d0d08fcff4d0e08fcff4d0f08fcff4d0009fcff4d0109fcff4d0209fcff4d0309fcff4d04091c1c1c0709fcff4d0809fcff4d0b091c1c1c0c09fcff4d0d09fcff4d0e09fcff4d0f09fcff4d000adcde3f010afcff4d020afcff4d030afcff4d040afcff4d050a404040060afcff4d070afcff4d080afcff4d090afcff4d0a0a4040400b0afcff4d0c0afcff4d0d0afcff4d0e0afcff4d0f0adcde3f010bfcff4d020bfcff4d030bfcff4d040bfcff4d050bfcff4d060bfcff4d070bfcff4d080bfcff4d090bfcff4d0a0bfcff4d0b0bfcff4d0c0bfcff4d0d0bfcff4d0e0bfcff4d010cdcde3f020cfcff4d030cfcff4d040cfcff4d050cfcff4d060cfcff4d070cfcff4d080cfcff4d090cfcff4d0a0cfcff4d0b0cfcff4d0c0cfcff4d0d0cfcff4d0e0cdcde3f020ddcde3f030dfcff4d040dfcff4d050dfcff4d060dfcff4d070dfcff4d080dfcff4d090dfcff4d0a0dfcff4d0b0dfcff4d0c0dfcff4d0d0ddcde3f030edcde3f040efcff4d050efcff4d060efcff4d070efcff4d080efcff4d090efcff4d0a0efcff4d0b0efcff4d0c0edcde3f050fdcde3f060ffcff4d070ffcff4d080ffcff4d090ffcff4d0a0fdcde3f\"}";
+LedPanelObject testObject;
 void setup() {
   Serial.begin(115200);
+  testObject = parseLedPanelJson(heart);
   //connectToWiFi();
   //postClientId();
 }
@@ -22,22 +23,25 @@ void loop() {
   try {
     colorAll(0, 0, 0);
     //LedPanelObject testObject = parseLedPanelJson(getUpdate().c_str());
-    LedPanelObject testObject = parseLedPanelJson(testJson);
-    LedPanelObject testObject2 = parseLedPanelJson(testJson2);
+    //LedPanelObject testObject = parseLedPanelJson(smiley);
     Serial.println(testObject.name.c_str());
+    /*
     Serial.println(testObject.pos_x);
     Serial.println(testObject.pos_y);
     Serial.println(testObject.rotationPoint_x);
     Serial.println(testObject.rotationPoint_y);
     Serial.println(testObject.imageData_length);
-    //drawRotatedObject(&testObject, angle);
-    //drawObject(&testObject);
-    drawObject(&testObject2);
+    */
+    drawRotatedObject(&testObject, angle);
+    //drawRotatedObject(&testObject, 0.0);
   } catch (const JsonParseException& e) {
     Serial.println(e.what());
-    Serial.println(testJson);
+    Serial.println(heart);
   }
-  adjustBrightness();
-  delay(1000);
-  angle = angle >= 360.0 ? 0.0 : angle + 11.0;
+  if (angle == 0.0) delay(950);
+  delay(50);
+  angle += 11.0;
+  if (angle >= 360.0) {
+    angle = 0.0;
+  }
 }

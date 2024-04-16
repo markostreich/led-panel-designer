@@ -31,20 +31,24 @@ const isGrid = ref(true);
 let context: CanvasRenderingContext2D | null = null;
 let canvas: HTMLCanvasElement | null = null;
 
-const CELL_AMOUNT_X = 30;
-const CELL_AMOUNT_Y = 20;
-const width = ref(600);
+const CELL_AMOUNT_X = 16;
+const CELL_AMOUNT_Y = 16;
+const width = ref(400);
 const height = ref(400);
 const CELL_WIDTH = width.value / CELL_AMOUNT_X;
 const CELL_HEIGHT = height.value / CELL_AMOUNT_Y;
 const LINE_WIDTH = 1;
+
+let pixelData: string[][] = Array.from({ length: CELL_AMOUNT_Y }, () =>
+  Array.from({ length: CELL_AMOUNT_X }, () => "000000")
+);
 
 const startDrawing = (event: MouseEvent) => {
   if (!context) return;
   isDrawing.value = true;
   let x = event.clientX - (event.target as HTMLElement).offsetLeft;
   let y = event.clientY - (event.target as HTMLElement).offsetTop;
-  console.log("x:" + x + " y:" + y);
+  //console.log("x:" + x + " y:" + y);
   _draw(x, y);
 };
 
@@ -63,6 +67,9 @@ const _draw = (x: number, y: number) => {
   if (!context) return;
   x = getXInGrid(x);
   y = getYInGrid(y);
+  let posX = x / CELL_WIDTH;
+  let posY = CELL_AMOUNT_Y - 1 - y / CELL_HEIGHT;
+  putPixel(posX, posY, color.value);
   context.fillStyle = color.value;
   context.fillRect(
     x + LINE_WIDTH,
@@ -85,13 +92,36 @@ const clearBoard = () => {
   context?.clearRect(0, 0, width.value, height.value);
   context?.beginPath();
   drawBoard(context, width.value, height.value, CELL_AMOUNT_X, CELL_AMOUNT_Y);
+  initPixelData();
 };
 
 onMounted(() => {
   initCanvas();
   drawBoard(context, width.value, height.value, CELL_AMOUNT_X, CELL_AMOUNT_Y);
   color.value = "white";
+  initPixelData();
 });
+
+const initPixelData = () => {
+  pixelData = Array.from({ length: CELL_AMOUNT_Y }, () =>
+    Array.from({ length: CELL_AMOUNT_X }, () => "000000")
+  );
+};
+
+const putPixel = (_x: number, _y: number, color: string) => {
+  pixelData[_y][_x] = color.slice(1);
+  logPixelData();
+};
+
+const logPixelData = () => {
+  let result = "";
+  pixelData.forEach((row, rowIndex) => {
+    row.forEach((value, colIndex) => {
+      if (value !== "000000") result += pixelToHex(colIndex, rowIndex, value);
+    });
+  });
+  console.log(result);
+};
 
 /**
  * Inits canvas and drawing context.
@@ -138,6 +168,14 @@ const drawGrid = (
     drawingContext.stroke();
   }
   color.value = "#ff0000";
+};
+
+const pixelToHex = (x: number, y: number, color: string): string => {
+  return _padHex(x.toString(16)) + _padHex(y.toString(16)) + color;
+};
+
+const _padHex = (hex: string) => {
+  return hex.padStart(2, "0");
 };
 </script>
 
