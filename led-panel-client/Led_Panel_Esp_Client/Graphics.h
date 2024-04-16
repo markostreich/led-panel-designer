@@ -13,7 +13,7 @@
 #endif                  // not TEST_MODE
 
 /* LED Potentiometer */
-#define POT T8
+#define POT 13
 
 #ifndef TEST_MODE
 /** @brief Amount of pixels in the LED panel. */
@@ -126,6 +126,7 @@ void adjustBrightness() {
  * @param ledPanelObject A pointer to the LED panel object containing the image data to be drawn.
  */
 void drawObject(const LedPanelObject* ledPanelObject) {
+  adjustBrightness();
   const int8_t pos_x = ledPanelObject->pos_x;
   const int8_t pos_y = ledPanelObject->pos_y;
   for (int i = 0; i < ledPanelObject->imageData_length; i += 5) {
@@ -162,28 +163,37 @@ void drawObject(const LedPanelObject* ledPanelObject) {
  *
  * @bug None known.
  */
-void drawRotatedPixel(int8_t x, int8_t y, float rot_x, float rot_y, float cosTau, float sinTau, uint8_t red, uint8_t green, uint8_t blue) {
+void drawRotatedPixel(int8_t x, int8_t y, float rot_x, float rot_y, float cosTau, float sinTau, uint8_t red, uint8_t green, uint8_t blue, bool doFill) {
   float new_x = rot_x + cosTau * ((float)x - rot_x) + sinTau * ((float)y - rot_y);
   float new_y = rot_y - sinTau * ((float)x - rot_x) + cosTau * ((float)y - rot_y);
   //float new_x = cosTau * ((float)x - 14.5) + sinTau * ((float)y-9.5);
   //float new_y = -sinTau * ((float)x - 14.5) + cosTau * ((float)y-9.5);
-  drawPixel((int8_t)(new_x + 0.5), (int8_t)(new_y + 0.5), red, green, blue);
+  int8_t int_new_x_up = (int8_t)(new_x + 0.5);
+  int8_t int_new_y_up = (int8_t)(new_y + 0.5);
+  int8_t int_new_x = (int8_t)new_x;
+  int8_t int_new_y = (int8_t)new_y;
+  drawPixel(int_new_x_up, int_new_y_up, red, green, blue);
+  if (doFill && (int_new_x_up != int_new_x || int_new_y_up != int_new_y))
+    drawPixel(int_new_x, int_new_y, red, green, blue);
 }
 
 void drawRotatedObject(const LedPanelObject* ledPanelObject, float angle) {
+  adjustBrightness();
   float angle_rad = angle * M_PI / 180.0;
   float cosTau = cos(angle_rad);
   float sinTau = sin(angle_rad);
   const int8_t pos_x = ledPanelObject->pos_x;
   const int8_t pos_y = ledPanelObject->pos_y;
+  bool doFill = angle == 0.0 || angle == 45.0 || angle == 180.0 || angle == 270.0 || angle == 360.0 ? false : true;
   for (int i = 0; i < ledPanelObject->imageData_length; i += 5) {
     const int8_t x = pos_x + ledPanelObject->imageData[i];
     const int8_t y = pos_y + ledPanelObject->imageData[i + 1];
     const int8_t r = ledPanelObject->imageData[i + 2];
     const int8_t g = ledPanelObject->imageData[i + 3];
     const int8_t b = ledPanelObject->imageData[i + 4];
-    drawRotatedPixel(x, y, ledPanelObject->rotationPoint_x, ledPanelObject->rotationPoint_y, cosTau, sinTau, r, g, b);
+    drawRotatedPixel(x, y, ledPanelObject->rotationPoint_x, ledPanelObject->rotationPoint_y, cosTau, sinTau, r, g, b, doFill);
   }
+  pixels.show();
 }
 
 /**
