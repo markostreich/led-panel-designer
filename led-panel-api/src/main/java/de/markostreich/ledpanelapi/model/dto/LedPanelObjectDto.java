@@ -6,4 +6,5 @@ public record LedPanelObjectDto(
 		int pos_y,
 		int rotationPoint_x,
 		int rotationPoint_y,
-		String imageData) {};
+		String imageData,
+		String deviceName) {};

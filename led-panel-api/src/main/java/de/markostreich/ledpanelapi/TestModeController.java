@@ -2,6 +2,7 @@ package de.markostreich.ledpanelapi;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +24,7 @@ public class TestModeController {
 	}
 
 	@GetMapping("/update/{device}")
-	public LedPanelObjectDto update() {
-		return new LedPanelObjectDto("testJsonName", 7, 7, 7, 7, EXAMPLE_IMAGE);
+	public LedPanelObjectDto update(@PathVariable final String deviceName) {
+		return new LedPanelObjectDto("testJsonName", 7, 7, 7, 7, EXAMPLE_IMAGE, deviceName);
 	}
 }
