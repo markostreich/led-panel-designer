@@ -1,4 +1,4 @@
-package de.markostreich.ledpanelapi.model;
+package de.markostreich.leddeviceapi.model;
 
 import java.util.UUID;
 
@@ -42,5 +42,5 @@ public class LedPanelObject {
 
 	@ManyToOne
 	@JoinColumn(name = "device_id")
-	private LedPanelDevice device;
+	private LedDevice device;
 }

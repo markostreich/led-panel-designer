@@ -1,16 +1,14 @@
-package de.markostreich.ledpanelapi.model;
+package de.markostreich.leddeviceapi.model;
 
-import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,18 +19,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LedPanelDevice {
+public class LedStripeObject {
 
 	@Id
 	@GeneratedValue
 	@Column(unique = true, nullable = false)
 	private UUID id;
 
-	@Column(unique = true)
-	private String name;
+	private LedStripeMode mode;
 
-	private Timestamp lastLogin;
+	private byte red;
 
-	@OneToMany(mappedBy = "device", cascade = CascadeType.ALL)
-	private final Set<LedPanelObject> objects = new HashSet<>();
+	private byte green;
+
+	private byte blue;
+
+	private byte brightness;
+
+	@OneToOne
+	@MapsId
+	@JoinColumn(name = "id")
+	private LedDevice device;
 }

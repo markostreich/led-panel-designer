@@ -1,4 +1,4 @@
-package de.markostreich.ledpanelapi.model.dto;
+package de.markostreich.leddeviceapi.model.dto;
 
 public record LedPanelObjectDto(
 		String name,
