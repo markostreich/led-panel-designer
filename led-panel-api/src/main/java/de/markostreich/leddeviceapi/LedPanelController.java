@@ -93,7 +93,7 @@ public class LedPanelController {
 	@GetMapping(path = "/panelobject/{object}", produces = "application/json")
 	public ResponseEntity<LedPanelObjectDto> getLedPanelObject(@PathVariable(name = "object") final String objectName) {
 		val ledPanelObject = ledPanelObjectRepository.findByName(objectName);
-		if (Objects.isNull(ledPanelObjectRepository)) {
+		if (Objects.isNull(ledPanelObject)) {
 			return ResponseEntity.notFound().build();
 		}
 		val responseBody = new LedPanelObjectDto(ledPanelObject.getName(), ledPanelObject.getX(), ledPanelObject.getY(),
