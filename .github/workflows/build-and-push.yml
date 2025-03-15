@@ -15,6 +15,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: led-panel-api
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
