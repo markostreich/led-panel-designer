@@ -34,10 +34,10 @@ public class LedPanelController {
 
 	@GetMapping(path = "/update/{device}", produces = "application/json")
 	public ResponseEntity<LedPanelObjectDto> update(@PathVariable(name = "device") final String deviceName) {
-		log.info("Searching data for '{}'...", deviceName);
+		log.info("Searching data for device '{}' ...", deviceName);
 		val ledPanelDevice = ledDeviceRepository.findByName(deviceName);
 		if (Objects.isNull(ledPanelDevice)) {
-			log.warn("Could not find device '{}'", deviceName);
+			log.warn("Could not find device '{}'.", deviceName);
 			return ResponseEntity.notFound().build();
 		}
 		val ledPanelObjectList = ledPanelObjectRepository.findByDevice(ledPanelDevice);
@@ -47,7 +47,7 @@ public class LedPanelController {
 		}
 		val ledPanelObject = ledPanelObjectList.get(0);
 		log.info("Found data for device '{}':", deviceName);
-		log.info(ledPanelObject.toString());
+//		log.info(ledPanelObject.toString());
 		return ResponseEntity.ok(new LedPanelObjectDto(ledPanelObject.getName(), ledPanelObject.getX(),
 				ledPanelObject.getY(), ledPanelObject.getRotationPointX(), ledPanelObject.getRotationPointY(),
 				hexFormat.formatHex(ledPanelObject.getData()), ledPanelObject.getDevice().getName()));
@@ -55,26 +55,36 @@ public class LedPanelController {
 
 	@PostMapping(path = "/panelobject", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> postLedPanelObject(@RequestBody final LedPanelObjectDto objectDto) {
+		log.info("Received {}.", objectDto.toString());
+		log.info("Searching data for device '{}'.", objectDto.deviceName());
 		val device = ledDeviceRepository.findByName(objectDto.deviceName());
-		if (Objects.isNull(device))
+		if (Objects.isNull(device)) {
+			log.warn("Could not find device '{}'.", objectDto.deviceName());
 			return ResponseEntity.noContent().build();
+		}
 		val exisistingLedPanelObject = ledPanelObjectRepository.findByName(objectDto.name());
 		if (Objects.nonNull(exisistingLedPanelObject)
-				&& !exisistingLedPanelObject.getDevice().getName().equals(objectDto.deviceName()))
+				&& !exisistingLedPanelObject.getDevice().getName().equals(objectDto.deviceName())) {
+			log.warn("Led panel object '{}' does not belong to device '{}'.", objectDto.name(), objectDto.deviceName());
 			return ResponseEntity.notFound().build();
+		}
 		if (Objects.nonNull(exisistingLedPanelObject)) {
+			log.info("Updating led panel device '{}'.", exisistingLedPanelObject.getName());
 			exisistingLedPanelObject.setX(objectDto.pox_x());
 			exisistingLedPanelObject.setY(objectDto.pos_y());
 			exisistingLedPanelObject.setRotationPointX(objectDto.rotationPoint_x());
 			exisistingLedPanelObject.setRotationPointY(objectDto.rotationPoint_y());
 			exisistingLedPanelObject.setData(hexStringToByteArray(objectDto.imageData()));
 			ledPanelObjectRepository.save(exisistingLedPanelObject);
+			log.info("Updated.");
 			return ResponseEntity.accepted().build();
 		}
+		log.info("Creating led panel device '{}'.", objectDto.name());
 		var createdObject = LedPanelObject.builder().name(objectDto.name()).x(objectDto.pox_x()).y(objectDto.pos_y())
 				.rotationPointX(objectDto.rotationPoint_x()).rotationPointY(objectDto.rotationPoint_y())
 				.data(hexStringToByteArray(objectDto.imageData())).device(device).build();
 		createdObject = ledPanelObjectRepository.save(createdObject);
+		log.info("Created.");
 		val location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/panelobject").path("/{object}")
 				.buildAndExpand(createdObject.getName()).toUri();
 		return ResponseEntity.created(location).build();

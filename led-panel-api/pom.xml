@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>de.markostreich</groupId>
 	<artifactId>led-panel-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>led-panel-api</name>
 	<description>API for a LED panel</description>
 	<properties>

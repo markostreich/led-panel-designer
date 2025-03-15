@@ -23,7 +23,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, getCurrentInstance } from "vue";
+
+const { proxy } = getCurrentInstance();
 
 const isDrawing = ref(false);
 const color = ref("#ff0000");
@@ -61,6 +63,7 @@ const draw = (event: MouseEvent) => {
 
 const stopDrawing = () => {
   isDrawing.value = false;
+  postImage();
 };
 
 const _draw = (x: number, y: number) => {
@@ -123,6 +126,16 @@ const logPixelData = () => {
   console.log(result);
 };
 
+const convertPixelDataToHex = (): string => {
+  let result = "";
+  pixelData.forEach((row, rowIndex) => {
+    row.forEach((value, colIndex) => {
+      if (value !== "000000") result += pixelToHex(colIndex, rowIndex, value);
+    });
+  });
+  return result;
+};
+
 /**
  * Inits canvas and drawing context.
  */
@@ -176,6 +189,22 @@ const pixelToHex = (x: number, y: number, color: string): string => {
 
 const _padHex = (hex: string) => {
   return hex.padStart(2, "0");
+};
+
+const postImage = () => {
+  const ledPanelObject = {
+    name: "heart",
+    pos_x: 0,
+    pos_y: 0,
+    rotationPoint_x: 8,
+    rotationPoint_y: 8,
+    imageData: convertPixelDataToHex(),
+    deviceName: "deviceOne",
+  };
+  proxy.$axios.post(
+    "http://localhost:8080/ledpanel/api/object",
+    ledPanelObject
+  );
 };
 </script>
 

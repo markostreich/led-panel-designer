@@ -1,6 +1,5 @@
 package de.markostreich.leddeviceapi;
 
-
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Objects;
@@ -26,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class LedDeviceController {
-	
+
 	private final LedDeviceRepository ledPanelDeviceRepository;
 
 	@PostMapping(path = "/connect", consumes = "application/json", produces = "application/json")
@@ -34,7 +33,7 @@ public class LedDeviceController {
 		/* Device exists */
 		val existingDevice = ledPanelDeviceRepository.findByName(device.name());
 		if (Objects.nonNull(existingDevice)) {
-			log.info("Device '{}' connected", existingDevice.getName());
+			log.info("Device '{}' connected.", existingDevice.getName());
 			return ResponseEntity.accepted().build();
 		}
 
