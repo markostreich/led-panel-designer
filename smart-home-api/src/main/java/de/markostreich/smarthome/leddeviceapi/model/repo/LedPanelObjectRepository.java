@@ -1,6 +1,7 @@
 package de.markostreich.smarthome.leddeviceapi.model.repo;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 
@@ -11,5 +12,5 @@ public interface LedPanelObjectRepository extends CrudRepository<LedPanelObject,
 
 	List<LedPanelObject> findByDevice(Device device);
 
-	LedPanelObject findByName(String name);
+	Optional<LedPanelObject> findByNameAndDevice(String name, Device device);
 }

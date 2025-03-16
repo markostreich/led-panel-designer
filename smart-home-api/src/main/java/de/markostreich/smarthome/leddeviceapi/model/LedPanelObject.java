@@ -10,6 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "device_id" }) })
 public class LedPanelObject {
 
 	@Id
@@ -27,7 +30,7 @@ public class LedPanelObject {
 	@Column(unique = true, nullable = false)
 	private UUID id;
 
-	@Column(unique = true)
+	@Column(nullable = false)
 	private String name;
 
 	private int x;
@@ -42,6 +45,6 @@ public class LedPanelObject {
 	private byte[] data;
 
 	@ManyToOne
-	@JoinColumn(name = "device_id")
+	@JoinColumn(name = "device_id", nullable = false)
 	private Device device;
 }
