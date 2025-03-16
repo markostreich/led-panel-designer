@@ -9,7 +9,7 @@ on:
       - main
 
 env:
-  DOCKER_IMAGE: led-panel-api
+  DOCKER_IMAGE: smart-home-api
 
 jobs:
   build:
@@ -17,7 +17,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: led-panel-api
+        working-directory: smart-home-api
 
     steps:
       - name: Checkout Repository

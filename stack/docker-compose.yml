@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  # Smart home API
+  smart-home-api:
+    image: markostreichde/smart-home-api:latest
+    container_name: smart-home-api
+    restart: always
+    ports:
+      - "8081:8080"
+
+  # Update images continously
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: always
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=60
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
