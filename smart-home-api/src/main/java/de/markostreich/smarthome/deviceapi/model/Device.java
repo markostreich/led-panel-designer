@@ -1,9 +1,11 @@
-package de.markostreich.smarthome.leddeviceapi.model;
+package de.markostreich.smarthome.deviceapi.model;
 
 import java.sql.Timestamp;
 import java.util.Set;
 import java.util.UUID;
 
+import de.markostreich.smarthome.leddeviceapi.model.LedPanelObject;
+import de.markostreich.smarthome.leddeviceapi.model.LedStripeObject;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,7 +24,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LedDevice {
+public class Device {
 
 	@Id
 	@GeneratedValue

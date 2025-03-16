@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import de.markostreich.smarthome.deviceapi.model.repo.DeviceRepository;
 import de.markostreich.smarthome.leddeviceapi.model.LedStripeMode;
 import de.markostreich.smarthome.leddeviceapi.model.LedStripeObject;
 import de.markostreich.smarthome.leddeviceapi.model.dto.LedStripeObjectDto;
-import de.markostreich.smarthome.leddeviceapi.model.repo.LedDeviceRepository;
 import de.markostreich.smarthome.leddeviceapi.model.repo.LedStripeObjectRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LedStripeController {
 
 	private final LedStripeObjectRepository ledStripeObjectRepository;
-	private final LedDeviceRepository ledDeviceRepository;
+	private final DeviceRepository ledDeviceRepository;
 
 	@GetMapping(path = "/update/{device}", produces = "application/json")
 	public ResponseEntity<LedStripeObjectDto> update(@PathVariable(name = "device") final String deviceName) {

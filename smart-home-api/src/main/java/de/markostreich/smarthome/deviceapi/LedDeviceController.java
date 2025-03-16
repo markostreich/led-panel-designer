@@ -1,4 +1,4 @@
-package de.markostreich.smarthome.leddeviceapi;
+package de.markostreich.smarthome.deviceapi;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import de.markostreich.smarthome.leddeviceapi.model.LedDevice;
-import de.markostreich.smarthome.leddeviceapi.model.dto.LedDeviceDto;
-import de.markostreich.smarthome.leddeviceapi.model.repo.LedDeviceRepository;
+import de.markostreich.smarthome.deviceapi.model.Device;
+import de.markostreich.smarthome.deviceapi.model.dto.DeviceDto;
+import de.markostreich.smarthome.deviceapi.model.repo.DeviceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +26,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LedDeviceController {
 
-	private final LedDeviceRepository ledPanelDeviceRepository;
+	private final DeviceRepository deviceRepository;
 
 	@PostMapping(path = "/connect", consumes = "application/json", produces = "application/json")
-	public ResponseEntity<Object> connectDevice(@RequestBody final LedDeviceDto device) {
+	public ResponseEntity<Object> connectDevice(@RequestBody final DeviceDto device) {
 		/* Device exists */
-		val existingDevice = ledPanelDeviceRepository.findByName(device.name());
+		val existingDevice = deviceRepository.findByName(device.name());
 		if (Objects.nonNull(existingDevice)) {
 			log.info("Device '{}' connected.", existingDevice.getName());
 			return ResponseEntity.accepted().build();
@@ -39,8 +39,8 @@ public class LedDeviceController {
 
 		/* add new device */
 		log.info("Adding new device '{}'.", device.name());
-		var createdDevice = LedDevice.builder().name(device.name()).lastLogin(Timestamp.from(Instant.now())).build();
-		createdDevice = ledPanelDeviceRepository.save(createdDevice);
+		var createdDevice = Device.builder().name(device.name()).lastLogin(Timestamp.from(Instant.now())).build();
+		createdDevice = deviceRepository.save(createdDevice);
 		log.info("Added new device '{}'.", createdDevice.getName());
 		val location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/update").path("/{device}")
 				.buildAndExpand(createdDevice.getName()).toUri();

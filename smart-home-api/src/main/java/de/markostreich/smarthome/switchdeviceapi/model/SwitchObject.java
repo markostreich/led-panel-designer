@@ -1,4 +1,4 @@
-package de.markostreich.smarthome.leddeviceapi.model;
+package de.markostreich.smarthome.switchdeviceapi.model;
 
 import java.util.UUID;
 
@@ -8,7 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LedPanelObject {
+public class SwitchObject {
 
 	@Id
 	@GeneratedValue
@@ -29,17 +28,8 @@ public class LedPanelObject {
 
 	@Column(unique = true)
 	private String name;
-
-	private int x;
-
-	private int y;
-
-	private int rotationPointX;
-
-	private int rotationPointY;
-
-	@Lob
-	private byte[] data;
+	
+	private boolean state;
 
 	@ManyToOne
 	@JoinColumn(name = "device_id")

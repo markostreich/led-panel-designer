@@ -2,6 +2,7 @@ package de.markostreich.smarthome.leddeviceapi.model;
 
 import java.util.UUID;
 
+import de.markostreich.smarthome.deviceapi.model.Device;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,5 +40,5 @@ public class LedStripeObject {
 	@OneToOne
 	@MapsId
 	@JoinColumn(name = "id")
-	private LedDevice device;
+	private Device device;
 }

@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import de.markostreich.smarthome.deviceapi.model.repo.DeviceRepository;
 import de.markostreich.smarthome.leddeviceapi.model.LedPanelObject;
 import de.markostreich.smarthome.leddeviceapi.model.dto.LedPanelObjectDto;
-import de.markostreich.smarthome.leddeviceapi.model.repo.LedDeviceRepository;
 import de.markostreich.smarthome.leddeviceapi.model.repo.LedPanelObjectRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -29,25 +29,28 @@ import lombok.extern.slf4j.Slf4j;
 public class LedPanelController {
 
 	private final LedPanelObjectRepository ledPanelObjectRepository;
-	private final LedDeviceRepository ledDeviceRepository;
+	private final DeviceRepository deviceRepository;
 	private final HexFormat hexFormat = HexFormat.of();
 
 	@GetMapping(path = "/update/{device}", produces = "application/json")
 	public ResponseEntity<LedPanelObjectDto> update(@PathVariable(name = "device") final String deviceName) {
 		log.info("Searching data for device '{}' ...", deviceName);
-		val ledPanelDevice = ledDeviceRepository.findByName(deviceName);
-		if (Objects.isNull(ledPanelDevice)) {
+		val device = deviceRepository.findByName(deviceName);
+		if (Objects.isNull(device)) {
 			log.warn("Could not find device '{}'.", deviceName);
 			return ResponseEntity.notFound().build();
 		}
-		val ledPanelObjectList = ledPanelObjectRepository.findByDevice(ledPanelDevice);
+		val ledPanelObjectList = ledPanelObjectRepository.findByDevice(device);
 		if (ledPanelObjectList.isEmpty()) {
 			log.warn("Could not find led panel data for device '{}'.", deviceName);
 			return ResponseEntity.noContent().build();
 		}
+		if (ledPanelObjectList.size() != 1) {
+			log.warn("Found more than one led panel data for device '{}'.", deviceName);
+			return ResponseEntity.badRequest().build();
+		}
 		val ledPanelObject = ledPanelObjectList.get(0);
 		log.info("Found data for device '{}':", deviceName);
-//		log.info(ledPanelObject.toString());
 		return ResponseEntity.ok(new LedPanelObjectDto(ledPanelObject.getName(), ledPanelObject.getX(),
 				ledPanelObject.getY(), ledPanelObject.getRotationPointX(), ledPanelObject.getRotationPointY(),
 				hexFormat.formatHex(ledPanelObject.getData()), ledPanelObject.getDevice().getName()));
@@ -57,7 +60,7 @@ public class LedPanelController {
 	public ResponseEntity<Object> postLedPanelObject(@RequestBody final LedPanelObjectDto objectDto) {
 		log.info("Received {}.", objectDto.toString());
 		log.info("Searching data for device '{}'.", objectDto.deviceName());
-		val device = ledDeviceRepository.findByName(objectDto.deviceName());
+		val device = deviceRepository.findByName(objectDto.deviceName());
 		if (Objects.isNull(device)) {
 			log.warn("Could not find device '{}'.", objectDto.deviceName());
 			return ResponseEntity.noContent().build();

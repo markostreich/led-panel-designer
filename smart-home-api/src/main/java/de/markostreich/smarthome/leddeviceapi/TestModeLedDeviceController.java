@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.markostreich.smarthome.leddeviceapi.model.LedDevice;
+import de.markostreich.smarthome.deviceapi.model.Device;
 import de.markostreich.smarthome.leddeviceapi.model.dto.LedPanelObjectDto;
 
 @RestController
@@ -19,7 +19,7 @@ public class TestModeLedDeviceController {
 	private static String EXAMPLE_IMAGE = "0000A7A700010100A7A70202A700A70303A700A70404A700A70505A700A70606A700A70707A700A70806A800A70909A700A70A0AA700A70B0BA700A7";
 
 	@PostMapping("/device/connect")
-	public LedDevice connectDevice(@RequestBody LedDevice device) {
+	public Device connectDevice(@RequestBody Device device) {
 		return device;
 	}
 
