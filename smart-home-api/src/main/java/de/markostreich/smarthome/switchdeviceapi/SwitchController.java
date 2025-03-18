@@ -49,7 +49,7 @@ public class SwitchController {
 				switchObjectList.size(), deviceName);
 		val switchObjectDtos = switchObjectList.stream()
 				.map(switchObject -> new SwitchObjectDto(switchObject.getName(),
-						switchObject.isState(),
+						switchObject.isState(), switchObject.getDuration(),
 						switchObject.getDevice().getName()))
 				.toList();
 		return ResponseEntity.ok(switchObjectDtos);
@@ -109,6 +109,7 @@ public class SwitchController {
 				.map(switchObject -> {
 					val responseBody = new SwitchObjectDto(
 							switchObject.getName(), switchObject.isState(),
+							switchObject.getDuration(),
 							switchObject.getDevice().getName());
 					return ResponseEntity.ok(responseBody);
 				}).orElse(ResponseEntity.notFound().build());

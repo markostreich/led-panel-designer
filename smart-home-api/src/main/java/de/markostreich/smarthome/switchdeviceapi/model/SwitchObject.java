@@ -21,7 +21,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "device_id" }) })
+@Table(uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"name", "device_id"})})
 public class SwitchObject {
 
 	@Id
@@ -31,8 +32,12 @@ public class SwitchObject {
 
 	@Column(nullable = false)
 	private String name;
-	
+
 	private boolean state;
+
+	@Column(nullable = true)
+	/** Duration in seconds. */
+	private Integer duration;
 
 	@ManyToOne
 	@JoinColumn(name = "device_id", nullable = false)
