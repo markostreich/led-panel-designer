@@ -113,12 +113,18 @@ public class LedPanelController {
 	public ResponseEntity<LedPanelObjectDto> getLedPanelObject(
 			@PathVariable(name = "device") final String deviceName,
 			@PathVariable(name = "object") final String objectName) {
+		log.info("Searching {}/{}", deviceName, objectName);
 		val device = deviceRepository.findByName(deviceName);
 		if (Objects.isNull(device)) {
 			log.warn("Could not find device '{}'.", deviceName);
 			return ResponseEntity.notFound().build();
 		}
-		return ledPanelObjectRepository.findByNameAndDevice(objectName, device)
+		val optionalPanelObject = ledPanelObjectRepository
+				.findByNameAndDevice(objectName, device);
+		optionalPanelObject.ifPresentOrElse(
+				object -> log.info("Found {}", object.getName()),
+				() -> log.info("Could not find {}", objectName));
+		return optionalPanelObject
 				.map(ledPanelObject -> {
 					val responseBody = new LedPanelObjectDto(
 							ledPanelObject.getName(), ledPanelObject.getX(),
