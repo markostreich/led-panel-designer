@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import de.markostreich.smarthome.leddeviceapi.model.LedPanelObject;
 import de.markostreich.smarthome.leddeviceapi.model.LedStripeObject;
+import de.markostreich.smarthome.switchdeviceapi.model.SwitchObject;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,4 +43,7 @@ public class Device {
 	@OneToOne(mappedBy = "device")
 	@PrimaryKeyJoinColumn
 	private LedStripeObject ledStripeObject;
+	
+	@OneToMany(mappedBy = "device", cascade = CascadeType.ALL)
+	private Set<SwitchObject> switchObjects;
 }

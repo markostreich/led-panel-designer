@@ -55,7 +55,7 @@ public class SwitchController {
 		return ResponseEntity.ok(switchObjectDtos);
 	}
 
-	@PostMapping(path = "/switchobject", consumes = "application/json", produces = "application/json")
+	@PostMapping(path = "/object", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<SwitchObjectDto> addSwitchObject(
 			@RequestBody SwitchObjectDto switchObjectDto) {
 		log.info("Attempting to add switch object for device '{}'.",
@@ -91,7 +91,7 @@ public class SwitchController {
 		return ResponseEntity.created(location).build();
 	}
 
-	@GetMapping(path = "/switchobject/{device}/{object}", produces = "application/json")
+	@GetMapping(path = "/object/{device}/{object}", produces = "application/json")
 	public ResponseEntity<SwitchObjectDto> getSwitchIbject(
 			@PathVariable(name = "device") final String deviceName,
 			@PathVariable(name = "object") final String objectName) {
@@ -100,6 +100,11 @@ public class SwitchController {
 			log.warn("Could not find device '{}'.", deviceName);
 			return ResponseEntity.notFound().build();
 		}
+		val optionalSwitchObject = switchObjectRepository
+				.findByNameAndDevice(objectName, device);
+		optionalSwitchObject.ifPresentOrElse(
+				object -> log.info("Found {}", object.getName()),
+				() -> log.info("Could not find {}", objectName));
 		return switchObjectRepository.findByNameAndDevice(objectName, device)
 				.map(switchObject -> {
 					val responseBody = new SwitchObjectDto(
