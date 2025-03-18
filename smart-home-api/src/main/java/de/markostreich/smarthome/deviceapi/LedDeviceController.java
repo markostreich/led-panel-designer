@@ -2,10 +2,13 @@ package de.markostreich.smarthome.deviceapi;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +32,8 @@ public class LedDeviceController {
 	private final DeviceRepository deviceRepository;
 
 	@PostMapping(path = "/connect", consumes = "application/json", produces = "application/json")
-	public ResponseEntity<Object> connectDevice(@RequestBody final DeviceDto device) {
+	public ResponseEntity<Object> connectDevice(
+			@RequestBody final DeviceDto device) {
 		/* Device exists */
 		val existingDevice = deviceRepository.findByName(device.name());
 		if (Objects.nonNull(existingDevice)) {
@@ -39,12 +43,23 @@ public class LedDeviceController {
 
 		/* add new device */
 		log.info("Adding new device '{}'.", device.name());
-		var createdDevice = Device.builder().name(device.name()).lastLogin(Timestamp.from(Instant.now())).build();
+		var createdDevice = Device.builder().name(device.name())
+				.lastLogin(Timestamp.from(Instant.now())).build();
 		createdDevice = deviceRepository.save(createdDevice);
 		log.info("Added new device '{}'.", createdDevice.getName());
-		val location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/update").path("/{device}")
+		val location = ServletUriComponentsBuilder.fromCurrentContextPath()
+				.path("/update").path("/{device}")
 				.buildAndExpand(createdDevice.getName()).toUri();
 		return ResponseEntity.created(location).build();
+	}
+
+	@GetMapping(path = "/devices", produces = "application/json")
+	public ResponseEntity<List<DeviceDto>> getDevices() {
+		val deviceIterator = deviceRepository.findAll();
+		val deviceDtos = new ArrayList<DeviceDto>();
+		deviceIterator.forEach(
+				device -> deviceDtos.add(new DeviceDto(device.getName())));
+		return ResponseEntity.ok(deviceDtos);
 	}
 
 }
