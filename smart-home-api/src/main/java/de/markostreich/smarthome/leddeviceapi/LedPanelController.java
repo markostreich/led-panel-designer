@@ -74,11 +74,6 @@ public class LedPanelController {
 		}
 		val exisistingLedPanelObjectOptional = ledPanelObjectRepository
 				.findByNameAndDevice(objectDto.name(), device);
-		if (!exisistingLedPanelObjectOptional.isPresent()) {
-			log.warn("Led panel object '{}' does not belong to device '{}'.",
-					objectDto.name(), objectDto.deviceName());
-			return ResponseEntity.notFound().build();
-		}
 		if (exisistingLedPanelObjectOptional.isPresent()) {
 			exisistingLedPanelObjectOptional
 					.ifPresent(exisistingLedPanelObject -> {
@@ -97,7 +92,7 @@ public class LedPanelController {
 					});
 			return ResponseEntity.accepted().build();
 		}
-		log.info("Creating led panel device '{}'.", objectDto.name());
+		log.info("Adding led panel object to device '{}'.", objectDto.name());
 		var createdObject = LedPanelObject.builder().name(objectDto.name())
 				.x(objectDto.pox_x()).y(objectDto.pos_y())
 				.rotationPointX(objectDto.rotationPoint_x())
