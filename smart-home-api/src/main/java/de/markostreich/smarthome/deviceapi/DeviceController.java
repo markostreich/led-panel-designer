@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/device")
 @RequiredArgsConstructor
 @Slf4j
-public class LedDeviceController {
+public class DeviceController {
 
 	private final DeviceRepository deviceRepository;
 
@@ -53,7 +53,7 @@ public class LedDeviceController {
 		return ResponseEntity.created(location).build();
 	}
 
-	@GetMapping(path = "/devices", produces = "application/json")
+	@GetMapping(path = "/list", produces = "application/json")
 	public ResponseEntity<List<DeviceDto>> getDevices() {
 		val deviceIterator = deviceRepository.findAll();
 		val deviceDtos = new ArrayList<DeviceDto>();
